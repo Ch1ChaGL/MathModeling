@@ -14,10 +14,12 @@ class EnablingElement {
 const elem = new EnablingElement(1, 1);
 
 let Matrix = [
-  [1, 1, 0, 3, 1, 0, 8],
-  [2, 3, 1, 0, 0, -1, 14],
-  [0, 1, 2, 4, 0, 0, 9],
-  [1, 2, 1, 2, 0, 0, 0],
+  [0.2, 0.1, 0.65, 0.15, 1, 0, 0, 0, 0, 850],
+  [0.4, 0.5, 0.3, 0.4, 0, 1, 0, 0, 0, 1350],
+  [0.1, 0, 0, 0, 0, 0, 1, 0, 0, 45],
+  [0, 0.3, 0, 0, 0, 0, 0, 1, 0, 95],
+  [0.3, 0.1, 0.05, 0.45, 0, 0, 0, 0, 1, 1500],
+  [245, 280, 320, 210, 0, 0, 0, 0, 0, 0],
 ];
 
 const matrixTransformation = (enablingElement, matrix) => {
@@ -33,7 +35,7 @@ const matrixTransformation = (enablingElement, matrix) => {
       const aiq = matrix[i][enablingElement.j];
 
       const newElement = aij - (apj * aiq) / apq;
-
+      
       newMatrix[i][j] = newElement;
     }
   }
@@ -105,11 +107,33 @@ const isDone = matrix => {
   return answer;
 };
 
-const getAnswer = matrix => Math.abs(matrix.at(-1).at(-1));
+const getAnswer = matrix => {
+  const newMatrix = deepCopyMatrix(matrix);
+  const lastRow = newMatrix.at(-1);
+  for (let i = 0; i < newMatrix.at(-1).length - 1; i++) {
+    if (lastRow[i] < 0){
+      console.log(`x${i+1} = 0`);
+    }
+    if(lastRow[i] === 0){
+      for (let x = 0; x < newMatrix.length; x++){
+        if(newMatrix[x][i] === 1) console.log(`x${i+1} = ${newMatrix[x].at(-1)}`)
+      }
+    }
+  }
+  return Math.abs(matrix.at(-1).at(-1))
+};
 
 while (!isDone(Matrix)) {
   const elem = getNextEnablingElement(Matrix);
   Matrix = matrixTransformation(elem, Matrix);
 }
 
+// let s = ""
 console.log(getAnswer(Matrix));
+// for(let i = 0; i< Matrix.length; i++){
+//   for(let j=0;j<Matrix.length; j++){
+//     s += (Matrix[i][j]).toString() + " ";
+//   }
+//   s += "\n";
+// }
+// console.log(s);
